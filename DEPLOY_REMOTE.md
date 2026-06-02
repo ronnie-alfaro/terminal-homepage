@@ -13,15 +13,23 @@ This project runs as a static Vite build served by unprivileged NGINX.
 From your local machine:
 
 ```bash
-rsync -av --exclude node_modules --exclude dist \
+rsync -av --delete --exclude node_modules --exclude dist \
   /Users/ronnie/Documents/Codex/2026-05-31/files-mentioned-by-the-user-pasted/ \
-  user@your-server-ip:/opt/ronnie-terminal-portfolio/
+  root@72.60.31.51:/docker/ronnie-terminal-portfolio
+```
+
+Optional cleaner sync, excluding Git metadata too:
+
+```bash
+rsync -av --delete --exclude node_modules --exclude dist --exclude .git \
+  /Users/ronnie/Documents/Codex/2026-05-31/files-mentioned-by-the-user-pasted/ \
+  root@72.60.31.51:/docker/ronnie-terminal-portfolio
 ```
 
 Or clone/copy the project into:
 
 ```text
-/opt/ronnie-terminal-portfolio
+/docker/ronnie-terminal-portfolio
 ```
 
 ## 2. Install Docker On Ubuntu/Debian
@@ -49,7 +57,7 @@ newgrp docker
 ## 3. Start The Site
 
 ```bash
-cd /opt/ronnie-terminal-portfolio
+cd /docker/ronnie-terminal-portfolio
 docker compose up --build -d
 ```
 
@@ -129,7 +137,7 @@ sudo certbot --nginx -d example.com -d www.example.com
 After editing files or pulling changes:
 
 ```bash
-cd /opt/ronnie-terminal-portfolio
+cd /docker/ronnie-terminal-portfolio
 docker compose up --build -d
 ```
 
