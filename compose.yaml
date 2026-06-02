@@ -1,0 +1,10 @@
+services:
+  portfolio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ronnie-terminal-portfolio:latest
+    container_name: ronnie-terminal-portfolio
+    ports:
+      - "127.0.0.1:8181:8080"
+    restart: unless-stopped

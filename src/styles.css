@@ -1,0 +1,599 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --bg: #071012;
+  --panel: #0b171a;
+  --panel-strong: #0e2024;
+  --line: rgba(132, 211, 220, 0.2);
+  --line-bright: rgba(105, 227, 218, 0.44);
+  --text: #e7f4f2;
+  --muted: #8fa8a8;
+  --cyan: #62d7df;
+  --green: #78e08f;
+  --amber: #f3c969;
+  --shadow: rgba(0, 0, 0, 0.42);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  background: var(--bg);
+}
+
+body {
+  min-width: 320px;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  background:
+    linear-gradient(rgba(98, 215, 223, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(98, 215, 223, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 50% 0%, rgba(98, 215, 223, 0.13), transparent 34rem),
+    #071012;
+  background-size: 44px 44px, 44px 44px, auto, auto;
+}
+
+#root {
+  height: 100%;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  height: 100dvh;
+  margin: 0 auto;
+  padding: clamp(18px, 4vh, 44px) 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.identity {
+  display: grid;
+  gap: 6px;
+}
+
+.eyebrow,
+.role-line {
+  margin: 0;
+  color: var(--muted);
+}
+
+.eyebrow {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: clamp(2rem, 6vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.role-line {
+  font-size: clamp(0.95rem, 2vw, 1.16rem);
+}
+
+.terminal-window {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  border: 1px solid var(--line-bright);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(15, 38, 42, 0.98), rgba(7, 17, 19, 0.98)),
+    var(--panel);
+  box-shadow: 0 26px 70px var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.terminal-window.order-66 {
+  --line: rgba(255, 91, 91, 0.24);
+  --line-bright: rgba(255, 66, 66, 0.68);
+  --cyan: #ff8a8a;
+  --green: #ff4f4f;
+  --amber: #ffce73;
+  background:
+    linear-gradient(180deg, rgba(45, 12, 14, 0.98), rgba(13, 4, 5, 0.98)),
+    #150506;
+  box-shadow:
+    0 26px 70px rgba(0, 0, 0, 0.5),
+    0 0 42px rgba(255, 41, 41, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.terminal-window.order-66 .terminal-topbar {
+  background: rgba(18, 3, 4, 0.9);
+}
+
+.terminal-window.order-66 .terminal-card,
+.terminal-window.order-66 .fortune-entry,
+.terminal-window.order-66 .asteroids-game {
+  background: rgba(31, 6, 8, 0.74);
+}
+
+.terminal-topbar {
+  min-height: 46px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(6, 15, 17, 0.82);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  color: var(--muted);
+}
+
+.terminal-topbar p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.window-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.window-controls span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #2b4c50;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.window-controls span:nth-child(1) {
+  background: #f46d68;
+}
+
+.window-controls span:nth-child(2) {
+  background: #f3c969;
+}
+
+.window-controls span:nth-child(3) {
+  background: #78e08f;
+}
+
+.status {
+  color: var(--green);
+  font-size: 0.82rem;
+}
+
+.terminal-body {
+  min-height: 0;
+  padding: clamp(18px, 3vw, 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(98, 215, 223, 0.45) transparent;
+}
+
+.intro-block {
+  max-width: 940px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.prompt-line,
+.entry,
+.command-row,
+.terminal-role,
+.statement,
+.terminal-card,
+.contact-block,
+.fortune-entry {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.prompt-line {
+  margin-bottom: 10px;
+  color: var(--green);
+}
+
+.intro-block h2 {
+  margin-bottom: 8px;
+  font-size: clamp(2.15rem, 8vw, 5.8rem);
+  line-height: 0.92;
+  letter-spacing: 0;
+}
+
+.terminal-role {
+  margin-bottom: 18px;
+  color: var(--cyan);
+  font-size: clamp(0.92rem, 2vw, 1.18rem);
+}
+
+.statement {
+  max-width: 820px;
+  margin-bottom: 20px;
+  color: #c8dcda;
+  font-size: clamp(0.95rem, 2vw, 1.12rem);
+  line-height: 1.7;
+}
+
+.signals,
+.stack-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.signals span,
+.stack-list span {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(98, 215, 223, 0.06);
+  color: #d5efed;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.82rem;
+}
+
+.signals span {
+  padding: 9px 11px;
+}
+
+.stack-list span {
+  padding: 6px 8px;
+}
+
+.history {
+  display: grid;
+  gap: 14px;
+  padding-top: 24px;
+}
+
+.entry {
+  margin-bottom: 0;
+  color: #d8e9e7;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.system-entry {
+  color: var(--muted);
+}
+
+.input-entry {
+  color: var(--green);
+}
+
+.fortune-entry {
+  border: 1px solid rgba(120, 224, 143, 0.22);
+  border-radius: 8px;
+  background: rgba(120, 224, 143, 0.045);
+  color: #d8e9e7;
+}
+
+.fortune-entry {
+  display: grid;
+  gap: 6px;
+  padding: 13px 14px;
+}
+
+.fortune-entry p {
+  margin-bottom: 0;
+  line-height: 1.55;
+}
+
+.fortune-entry p:first-child {
+  color: var(--green);
+}
+
+.asteroids-game {
+  display: grid;
+  gap: 10px;
+  max-width: 760px;
+  padding: 14px;
+  border: 1px solid rgba(98, 215, 223, 0.32);
+  border-radius: 8px;
+  background: rgba(5, 13, 15, 0.8);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.game-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--green);
+  font-size: 0.86rem;
+}
+
+.asteroids-game pre {
+  margin: 0;
+  overflow-x: auto;
+  color: #d8e9e7;
+  font-size: clamp(0.52rem, 1.45vw, 0.92rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+  user-select: none;
+}
+
+.asteroids-game p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.asteroids-game .game-over {
+  color: var(--amber);
+}
+
+.grid-list {
+  display: grid;
+  gap: 12px;
+}
+
+.project-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.credentials-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.terminal-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(9, 24, 27, 0.76);
+}
+
+.terminal-card h3 {
+  margin-bottom: 6px;
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.terminal-card p {
+  margin-bottom: 0;
+  color: #bdd0cf;
+  font-size: 0.9rem;
+  line-height: 1.58;
+}
+
+.command-card {
+  max-width: 860px;
+}
+
+.terminal-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: #bdd0cf;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.terminal-list li::marker {
+  color: var(--green);
+}
+
+.help-card {
+  gap: 16px;
+}
+
+.help-group {
+  display: grid;
+  gap: 8px;
+}
+
+.help-command-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.help-command-list button {
+  min-height: 30px;
+  padding: 5px 9px;
+  border: 1px solid rgba(98, 215, 223, 0.28);
+  border-radius: 6px;
+  color: var(--cyan);
+  background: rgba(98, 215, 223, 0.055);
+  cursor: pointer;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.86rem;
+}
+
+.help-command-list button:hover,
+.help-command-list button:focus-visible {
+  border-color: rgba(120, 224, 143, 0.56);
+  color: var(--green);
+  outline: 0;
+}
+
+.cv-download {
+  gap: 7px;
+}
+
+.hire-card,
+.link-card,
+.order-card,
+.cheat-card,
+.suggestion-card {
+  gap: 7px;
+}
+
+.cheat-card {
+  border-color: rgba(243, 201, 105, 0.4);
+  background: rgba(243, 201, 105, 0.055);
+}
+
+.cheat-label {
+  color: var(--amber);
+}
+
+.terminal-card .tagline,
+.period {
+  color: var(--cyan);
+}
+
+.period {
+  margin-bottom: -2px;
+  font-size: 0.8rem;
+}
+
+.contact-block {
+  display: grid;
+  gap: 8px;
+  color: #d6e8e6;
+}
+
+.contact-block p {
+  margin-bottom: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.command-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 54px;
+  padding: 0 18px;
+  border-top: 1px solid var(--line);
+  background: rgba(5, 13, 15, 0.95);
+  color: var(--green);
+}
+
+.command-row-guide::before {
+  content: "";
+  position: absolute;
+  inset: 7px 10px;
+  pointer-events: none;
+  border: 1px solid rgba(120, 224, 143, 0);
+  border-radius: 7px;
+  animation: prompt-guide 2.4s ease-in-out infinite;
+}
+
+.command-row input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  caret-color: transparent;
+}
+
+.command-row input::placeholder {
+  color: rgba(143, 168, 168, 0.72);
+}
+
+.command-row input:disabled {
+  color: var(--muted);
+}
+
+.cursor {
+  width: 9px;
+  height: 1.2em;
+  background: var(--green);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+.cursor-guide {
+  box-shadow: 0 0 16px rgba(120, 224, 143, 0.62);
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes prompt-guide {
+  50% {
+    border-color: rgba(120, 224, 143, 0.28);
+    box-shadow: inset 0 0 18px rgba(120, 224, 143, 0.055);
+  }
+}
+
+@media (max-width: 860px) {
+  .shell {
+    width: min(100% - 20px, 760px);
+  }
+
+  .project-list {
+    grid-template-columns: 1fr;
+  }
+
+  .credentials-list {
+    grid-template-columns: 1fr;
+  }
+
+  .terminal-topbar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .status {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .shell {
+    width: 100%;
+    padding: 0;
+  }
+
+  .terminal-window {
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 0;
+    border-radius: 0;
+  }
+
+  .terminal-body {
+    padding: 16px 14px;
+  }
+
+  .intro-block h2 {
+    font-size: clamp(2.1rem, 15vw, 4rem);
+  }
+
+  .signals span,
+  .stack-list span {
+    font-size: 0.78rem;
+  }
+}
