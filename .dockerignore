@@ -3,3 +3,4 @@ dist
 .git
 .DS_Store
 npm-debug.log*
+DEPLOY_REMOTE.md
