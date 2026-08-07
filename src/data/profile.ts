@@ -10,7 +10,7 @@ export const profile = {
     email: 'ralfaro@pm.me',
     location: 'San Jose, Costa Rica',
     linkedin: 'linkedin.com/in/ronniealfaro',
-    gitlab: 'gitlab.com/users/ronnie_alfaro/projects',
+    github: 'github.com/ronnie-alfaro',
   },
 };
 

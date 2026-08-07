@@ -42,4 +42,33 @@ export type TerminalEntry =
       id: string;
       type: 'fortune';
       content: string;
+    }
+  | {
+      id: string;
+      type: 'file-listing';
+    }
+  | {
+      id: string;
+      type: 'command-error';
+      content: string;
+      suggestion?: string;
+    };
+
+export type VirtualFile =
+  | {
+      permissions: string;
+      owner: string;
+      size: string;
+      name: string;
+      kind: 'command';
+      command: string;
+    }
+  | {
+      permissions: string;
+      owner: string;
+      size: string;
+      name: string;
+      kind: 'link';
+      href: string;
+      download?: boolean;
     };

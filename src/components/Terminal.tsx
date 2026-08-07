@@ -7,6 +7,7 @@ import { fortuneFacts } from '../data/fortunes';
 import { credentials } from '../data/credentials';
 import { aiImpact, leadership, principles } from '../data/leadership';
 import { hireRonnie, summary, whyHire } from '../data/recruiter';
+import { virtualFiles } from '../data/filesystem';
 import type { TerminalEntry } from '../types/terminal';
 
 const helpGroups = [
@@ -20,7 +21,11 @@ const helpGroups = [
   },
   {
     title: 'Meta',
-    commands: ['credentials', 'contact', 'blog', 'open linkedin', 'open gitlab', 'wget cv', 'fortune', 'clear'],
+    commands: ['credentials', 'contact', 'blog', 'open linkedin', 'open github', 'wget cv', 'fortune', 'clear'],
+  },
+  {
+    title: 'Unix',
+    commands: ['ls -la', 'pwd', 'whoami', 'uname -a', 'cat about.txt', 'man portfolio'],
   },
 ];
 
@@ -32,7 +37,29 @@ const cheatHelpGroups = [
   },
 ];
 
-const suggestedCommands = ['help', 'summary', 'why-hire', 'wget cv', 'blog'];
+const suggestedCommands = ['ls', 'summary', 'why-hire', 'wget cv', 'blog'];
+const knownCommands = [
+  ...helpGroups.flatMap((group) => group.commands),
+  ...virtualFiles.filter((file) => file.kind === 'command').map((file) => file.command),
+  'help',
+  'ls',
+  'ls -l',
+  'dir',
+  'uname',
+  'echo $home',
+  'man',
+  'linkedin',
+  'github',
+  'cv',
+  'open blog',
+  'open cv',
+  'open cv.pdf',
+  'wget cv.pdf',
+  'download cv',
+  'asteroids',
+  'sudo hire ronnie',
+  'execute order 66',
+];
 const blogUrl = 'https://blog.ronniealfaro.com';
 const cvPath = '/assets/Ronnie_Alfaro_CV_2026.pdf';
 const cheatAudioPath = '/assets/CTS.mp3';
@@ -80,6 +107,58 @@ const initialAsteroidsState = (): AsteroidsState => ({
 
 function randomFortune() {
   return fortuneFacts[Math.floor(Math.random() * fortuneFacts.length)];
+}
+
+function editDistance(left: string, right: string) {
+  const previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+
+  for (let leftIndex = 1; leftIndex <= left.length; leftIndex += 1) {
+    const current = [leftIndex];
+
+    for (let rightIndex = 1; rightIndex <= right.length; rightIndex += 1) {
+      const substitutionCost = left[leftIndex - 1] === right[rightIndex - 1] ? 0 : 1;
+      current[rightIndex] = Math.min(
+        current[rightIndex - 1] + 1,
+        previous[rightIndex] + 1,
+        previous[rightIndex - 1] + substitutionCost,
+      );
+    }
+
+    previous.splice(0, previous.length, ...current);
+  }
+
+  return previous[right.length];
+}
+
+function closestCommand(command: string) {
+  const candidates = [...new Set(knownCommands)];
+  const closest = candidates.reduce<{ command: string; distance: number } | undefined>((best, candidate) => {
+    const distance = editDistance(command, candidate);
+    return !best || distance < best.distance ? { command: candidate, distance } : best;
+  }, undefined);
+
+  if (!closest) {
+    return undefined;
+  }
+
+  const maximumDistance = Math.max(2, Math.ceil(command.length * 0.3));
+  return closest.distance <= maximumDistance ? closest.command : undefined;
+}
+
+function commandError(command: string): TerminalEntry {
+  const suggestion = closestCommand(command);
+  const [program, ...argumentsList] = command.split(' ');
+  const target = argumentsList.join(' ');
+  const content = ['cat', 'open', 'wget'].includes(program) && target
+    ? `${program}: ${target}: No such file or directory`
+    : `command not found: ${command}`;
+
+  return {
+    id: createId(),
+    type: 'command-error',
+    content,
+    suggestion,
+  };
 }
 
 function playOrder66Audio() {
@@ -130,6 +209,24 @@ function playCheatAudio() {
 
 function commandOutput(command: string): TerminalEntry[] {
   switch (command) {
+    case 'ls':
+    case 'ls -l':
+    case 'ls -la':
+    case 'dir':
+      return [{ id: createId(), type: 'file-listing' }];
+    case 'pwd':
+      return [{ id: createId(), type: 'text', content: '/home/ronnie' }];
+    case 'whoami':
+      return [{ id: createId(), type: 'text', content: 'ronnie' }];
+    case 'uname':
+      return [{ id: createId(), type: 'text', content: 'PortfolioOS' }];
+    case 'uname -a':
+      return [{ id: createId(), type: 'text', content: 'PortfolioOS ronnie-profile 2026 web-terminal x86_64' }];
+    case 'echo $home':
+      return [{ id: createId(), type: 'text', content: '/home/ronnie' }];
+    case 'man':
+    case 'man portfolio':
+      return [{ id: createId(), type: 'help', content: '' }];
     case 'help':
       return [
         {
@@ -139,8 +236,10 @@ function commandOutput(command: string): TerminalEntry[] {
         },
       ];
     case 'about':
+    case 'cat about.txt':
       return [{ id: createId(), type: 'text', content: profile.about }];
     case 'summary':
+    case 'cat summary.md':
       return [{ id: createId(), type: 'summary', content: summary }];
     case 'why-hire':
       return [{ id: createId(), type: 'why-hire' }];
@@ -151,16 +250,23 @@ function commandOutput(command: string): TerminalEntry[] {
     case 'principles':
       return [{ id: createId(), type: 'principles' }];
     case 'projects':
+    case 'cat projects':
+    case 'cat projects/':
       return [{ id: createId(), type: 'projects' }];
     case 'experience':
+    case 'cat experience.log':
       return [{ id: createId(), type: 'experience' }];
     case 'skills':
+    case 'cat skills.json':
       return [{ id: createId(), type: 'skills' }];
     case 'credentials':
+    case 'cat credentials.txt':
       return [{ id: createId(), type: 'credentials' }];
     case 'contact':
+    case 'cat contact.txt':
       return [{ id: createId(), type: 'contact' }];
     case 'blog':
+    case 'open blog':
       return [{ id: createId(), type: 'blog' }];
     case 'open linkedin':
     case 'linkedin':
@@ -172,26 +278,30 @@ function commandOutput(command: string): TerminalEntry[] {
           href: `https://${profile.contact.linkedin}`,
         },
       ];
-    case 'open gitlab':
-    case 'gitlab':
+    case 'open github':
+    case 'github':
       return [
         {
           id: createId(),
           type: 'open-link',
-          content: 'Opening GitLab target:',
-          href: `https://${profile.contact.gitlab}`,
+          content: 'Opening GitHub target:',
+          href: `https://${profile.contact.github}`,
         },
       ];
     case 'sudo hire ronnie':
       return [{ id: createId(), type: 'hire-ronnie' }];
     case 'cv':
+    case 'open cv':
+    case 'open cv.pdf':
+    case 'cat cv.pdf':
     case 'wget cv':
+    case 'wget cv.pdf':
     case 'download cv':
       return [{ id: createId(), type: 'cv-download' }];
     case 'fortune':
       return [{ id: createId(), type: 'fortune', content: randomFortune() }];
     default:
-      return [{ id: createId(), type: 'text', content: 'Unknown command. Type help.' }];
+      return [commandError(command)];
   }
 }
 
@@ -228,6 +338,25 @@ function Entry({
     return <p className={`entry ${entry.type === 'system' ? 'system-entry' : ''}`}>{entry.content}</p>;
   }
 
+  if (entry.type === 'command-error') {
+    return (
+      <div className="command-error" role="alert">
+        <p>{entry.content}</p>
+        {entry.suggestion ? (
+          <p>
+            Did you mean:{' '}
+            <button type="button" onClick={() => onRunCommand(entry.suggestion!)}>
+              {entry.suggestion}
+            </button>
+            ?
+          </p>
+        ) : (
+          <p className="system-entry">Type ls or help to see the available commands.</p>
+        )}
+      </div>
+    );
+  }
+
   if (entry.type === 'help') {
     const groups = cheatMode ? cheatHelpGroups : helpGroups;
 
@@ -246,6 +375,39 @@ function Entry({
             </div>
           </div>
         ))}
+      </article>
+    );
+  }
+
+  if (entry.type === 'file-listing') {
+    return (
+      <article className="file-listing" aria-label="Virtual home directory">
+        <p className="listing-total">total {virtualFiles.length}</p>
+        <div className="file-listing-grid" role="list">
+          {virtualFiles.map((file) => (
+            <div className="file-row" role="listitem" key={file.name}>
+              <span className="file-permissions">{file.permissions}</span>
+              <span>{file.owner}</span>
+              <span className="file-size">{file.size}</span>
+              {file.kind === 'command' ? (
+                <button type="button" onClick={() => onRunCommand(file.command)}>
+                  {file.name}
+                </button>
+              ) : (
+                <a
+                  className="file-link"
+                  href={file.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  {file.name}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="listing-hint">click an entry, or try: cat about.txt · open CV.pdf · open blog</p>
       </article>
     );
   }
@@ -478,7 +640,7 @@ function Entry({
       <p>Email: <a href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a></p>
       <p>Location: {profile.contact.location}</p>
       <p>LinkedIn: <a href={`https://${profile.contact.linkedin}`}>{profile.contact.linkedin}</a></p>
-      <p>GitLab: <a href={`https://${profile.contact.gitlab}`}>{profile.contact.gitlab}</a></p>
+      <p>GitHub: <a href={`https://${profile.contact.github}`}>{profile.contact.github}</a></p>
     </div>
   );
 }
