@@ -61,7 +61,7 @@ const knownCommands = [
   'execute order 66',
 ];
 const blogUrl = 'https://blog.ronniealfaro.com';
-const cvPath = '/assets/Ronnie_Alfaro_CV_2026.pdf';
+const cvPath = '/assets/Ronnie_CV.pdf';
 const cheatAudioPath = '/assets/CTS.mp3';
 const gameWidth = 42;
 const gameHeight = 16;
@@ -637,10 +637,11 @@ function Entry({
 
   return (
     <div className="contact-block">
+      <p>Phone: <a href={`tel:${profile.contact.phone.replace(/\s/g, '')}`}>{profile.contact.phone}</a></p>
       <p>Email: <a href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a></p>
-      <p>Location: {profile.contact.location}</p>
       <p>LinkedIn: <a href={`https://${profile.contact.linkedin}`}>{profile.contact.linkedin}</a></p>
       <p>GitHub: <a href={`https://${profile.contact.github}`}>{profile.contact.github}</a></p>
+      <p>Credly: <a href={`https://${profile.contact.credly}`}>{profile.contact.credly}</a></p>
     </div>
   );
 }

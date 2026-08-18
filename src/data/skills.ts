@@ -5,15 +5,19 @@ export type SkillGroup = {
 
 export const skills: SkillGroup[] = [
   {
-    title: 'AI & LLM Engineering',
-    items: ['RAG Pipelines', 'LLM Integration', 'Prompt Engineering', 'Qdrant', 'Vector Databases', 'Semantic Search', 'MCP Servers', 'Agent Workflows', 'Local LLMs'],
+    title: 'Languages',
+    items: ['Python', 'TypeScript', 'JavaScript', 'Rust', 'SQL', 'Bash', 'Perl'],
   },
   {
-    title: 'Infrastructure & Engineering',
-    items: ['Linux/Unix', 'Python', 'Rust', 'FastAPI', 'Docker', 'Kubernetes', 'AWS', 'Databases', 'Shell Scripting', 'ServiceNow'],
+    title: 'AI / Retrieval',
+    items: ['RAG', 'MCP', 'LangChain', 'LangGraph', 'Embeddings', 'Semantic Search', 'Vector Databases', 'llama.cpp', 'GGUF', 'Local Inference'],
   },
   {
-    title: 'Leadership & Operations',
-    items: ['Team Leadership', 'Coaching', 'Agile/Scrum', 'Lean Six Sigma', 'Incident Management', 'Process Design', 'Routing Models', 'Automation'],
+    title: 'Platform / Cloud',
+    items: ['Docker Compose', 'GitHub Actions', 'GitOps', 'Kubernetes', 'Terraform', 'CloudFormation', 'Ansible', 'AWS', 'Azure', 'GCP', 'Linux'],
+  },
+  {
+    title: 'Data / Reliability',
+    items: ['PostgreSQL', 'SQLite', 'MongoDB', 'Redis', 'Kafka', 'ChromaDB', 'Qdrant', 'Grafana', 'Prometheus', 'OpenTelemetry', 'Splunk', 'Nginx'],
   },
 ];

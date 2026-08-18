@@ -8,7 +8,7 @@ export const virtualFiles: VirtualFile[] = [
   { permissions: '-rw-r--r--', owner: 'ronnie', size: '3.2K', name: 'skills.json', kind: 'command', command: 'cat skills.json' },
   { permissions: '-rw-r--r--', owner: 'ronnie', size: '1.8K', name: 'credentials.txt', kind: 'command', command: 'cat credentials.txt' },
   { permissions: '-rw-r--r--', owner: 'ronnie', size: '512B', name: 'contact.txt', kind: 'command', command: 'cat contact.txt' },
-  { permissions: '-rw-r--r--', owner: 'ronnie', size: '143K', name: 'CV.pdf', kind: 'link', href: '/assets/Ronnie_Alfaro_CV_2026.pdf' },
+  { permissions: '-rw-r--r--', owner: 'ronnie', size: '162K', name: 'CV.pdf', kind: 'link', href: '/assets/Ronnie_CV.pdf' },
   { permissions: 'lrwxrwxrwx', owner: 'ronnie', size: '31B', name: 'blog@', kind: 'link', href: 'https://blog.ronniealfaro.com' },
   { permissions: 'lrwxrwxrwx', owner: 'ronnie', size: '32B', name: 'github@', kind: 'link', href: 'https://github.com/ronnie-alfaro' },
   { permissions: 'lrwxrwxrwx', owner: 'ronnie', size: '36B', name: 'linkedin@', kind: 'link', href: 'https://linkedin.com/in/ronniealfaro' },

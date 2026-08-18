@@ -1,11 +1,11 @@
 export const summary =
-  'Ronnie Alfaro is an Engineering Manager with 20+ years in technology, leading support engineering teams while building production AI systems across RAG, vector search, automation, MCP servers, and local-first LLM infrastructure.';
+  'Ronnie Alfaro is a hands-on engineering leader with 20+ years of experience defining technical strategy across software architecture, platform engineering, AI systems, cloud-native infrastructure, developer tooling, support engineering, and operational excellence.';
 
 export const whyHire = [
-  'Senior leadership plus hands-on AI engineering',
-  'Proven team scaling, coaching, and operating model design',
-  'Production-grade automation and AI workflows',
-  'Infrastructure depth from Linux, AWS, Docker, Kubernetes, and support platforms',
+  'Raised a core SLA from ~75% to nearly 99% through automation and Lean Six Sigma methods',
+  'Built engineering platforms that processed 10,000+ requests and saved ~500 engineering hours per month',
+  'Led distributed teams of up to 20 engineers while remaining hands-on in architecture and delivery',
+  'Deep experience across AI, software platforms, cloud infrastructure, reliability, and support engineering',
 ];
 
 export const hireRonnie = {

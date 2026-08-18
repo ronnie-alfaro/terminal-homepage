@@ -1,23 +1,21 @@
 export const leadership = {
   title: 'Operating model',
   items: [
-    'Built and scaled distributed support engineering teams',
-    'Led 14 engineers through growth, churn, and capacity constraints',
-    'Designed routing logic, escalation paths, review cycles, and operating rhythms',
-    'Coached engineers toward seniority and leadership paths',
-    'Balanced delivery, quality, morale, and measurable support outcomes',
+    'Led a globally distributed team of 14 engineers across five countries',
+    'Led ~20 engineers across Systems Administration, Development, ServiceNow, Monitoring, and SRE',
+    'Developed three engineers into Staff Engineer and Engineering Management roles',
+    'Built a capacity model enabling 15% leaner staffing and nearly 2x target performance without burnout',
+    'Combined technical strategy, stakeholder management, mentoring, incident management, Agile, Scrum, OKRs, and RCA',
   ],
 };
 
 export const aiImpact = {
   title: 'Production AI focus',
   items: [
-    'Closed-ticket ingestion into embeddings',
-    'Qdrant vector search for knowledge gap detection',
-    'Inverse relevancy scoring to surface missing documentation',
-    'Auto-generated GitLab merge requests',
-    'Prompt-injection handling for untrusted support content',
-    'Local-first LLM infrastructure, MCP servers, and agent frameworks',
+    'Led research, architecture, POCs, implementation, and model integration for SEMRA',
+    'Built local-first RAG and long-form translation platforms without commercial inference APIs',
+    'Hands-on with RAG, MCP, AI agents, semantic search, LangGraph, LangChain, vector databases, and PyTorch',
+    'Designed resilient LLM workflows with durable state, checkpointing, pause/resume, and crash recovery',
   ],
 };
 
