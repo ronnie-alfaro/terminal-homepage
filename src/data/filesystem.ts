@@ -6,7 +6,7 @@ export const virtualFiles: VirtualFile[] = [
   { permissions: '-rw-r--r--', owner: 'ronnie', size: '8.6K', name: 'experience.log', kind: 'command', command: 'cat experience.log' },
   { permissions: 'drwxr-xr-x', owner: 'ronnie', size: '4.0K', name: 'projects/', kind: 'command', command: 'cat projects/' },
   { permissions: '-rw-r--r--', owner: 'ronnie', size: '3.2K', name: 'skills.json', kind: 'command', command: 'cat skills.json' },
-  { permissions: '-rw-r--r--', owner: 'ronnie', size: '1.8K', name: 'credentials.txt', kind: 'command', command: 'cat credentials.txt' },
+  { permissions: '-rw-r--r--', owner: 'ronnie', size: '8.0K', name: 'certificates.txt', kind: 'command', command: 'cat certificates.txt' },
   { permissions: '-rw-r--r--', owner: 'ronnie', size: '512B', name: 'contact.txt', kind: 'command', command: 'cat contact.txt' },
   { permissions: '-rw-r--r--', owner: 'ronnie', size: '162K', name: 'CV.pdf', kind: 'link', href: '/assets/Ronnie_CV.pdf' },
   { permissions: 'lrwxrwxrwx', owner: 'ronnie', size: '31B', name: 'blog@', kind: 'link', href: 'https://blog.ronniealfaro.com' },

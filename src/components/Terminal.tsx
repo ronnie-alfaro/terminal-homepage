@@ -1,14 +1,15 @@
-import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, KeyboardEvent, MouseEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { bootSequence, profile } from '../data/profile';
 import { projects } from '../data/projects';
 import { experience } from '../data/experience';
 import { skills } from '../data/skills';
 import { fortuneFacts } from '../data/fortunes';
-import { credentials } from '../data/credentials';
+import { certificates, credlyProfileUrl, credlySkillsUrl, featuredBadges, verifiedSkills } from '../data/credentials';
 import { aiImpact, leadership, principles } from '../data/leadership';
 import { hireRonnie, summary, whyHire } from '../data/recruiter';
 import { virtualFiles } from '../data/filesystem';
 import type { TerminalEntry } from '../types/terminal';
+import { SkillGraph } from './SkillGraph';
 
 const helpGroups = [
   {
@@ -21,7 +22,7 @@ const helpGroups = [
   },
   {
     title: 'Meta',
-    commands: ['credentials', 'contact', 'blog', 'open linkedin', 'open github', 'wget cv', 'fortune', 'clear'],
+    commands: ['certificates', 'credentials', 'contact', 'blog', 'open linkedin', 'open github', 'wget cv', 'fortune', 'clear'],
   },
   {
     title: 'Unix',
@@ -37,7 +38,7 @@ const cheatHelpGroups = [
   },
 ];
 
-const suggestedCommands = ['ls', 'summary', 'why-hire', 'wget cv', 'blog'];
+const suggestedCommands = ['ls', 'summary', 'why-hire', 'certificates', 'wget cv', 'blog'];
 const knownCommands = [
   ...helpGroups.flatMap((group) => group.commands),
   ...virtualFiles.filter((file) => file.kind === 'command').map((file) => file.command),
@@ -260,7 +261,9 @@ function commandOutput(command: string): TerminalEntry[] {
     case 'cat skills.json':
       return [{ id: createId(), type: 'skills' }];
     case 'credentials':
+    case 'certificates':
     case 'cat credentials.txt':
+    case 'cat certificates.txt':
       return [{ id: createId(), type: 'credentials' }];
     case 'contact':
     case 'cat contact.txt':
@@ -543,7 +546,7 @@ function Entry({
         {projects.map((project) => (
           <article className="terminal-card" key={project.name}>
             <div>
-              <h3>{project.name}</h3>
+              <h3><a href={project.href} target="_blank" rel="noreferrer">{project.name}</a></h3>
               <p className="tagline">{project.tagline}</p>
             </div>
             <p>{project.description}</p>
@@ -620,17 +623,55 @@ function Entry({
 
   if (entry.type === 'credentials') {
     return (
-      <div className="grid-list credentials-list">
-        {credentials.map((group) => (
-          <article className="terminal-card" key={group.title}>
-            <h3>{group.title}</h3>
-            <div className="stack-list">
-              {group.items.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
-          </article>
-        ))}
+      <div className="credentials-section">
+        <article className="terminal-card credentials-overview">
+          <p className="period">CREDENTIALS / 2026</p>
+          <h3>AI engineering, MLOps, and secure delivery</h3>
+          <p>13 courses across Duke University, IBM, and Google. Public Credly badges provide independent evidence for agentic AI, RAG, multimodal applications, and AI security.</p>
+          <div className="stack-list" aria-label="Credly verified skills">
+            {verifiedSkills.map((skill) => (
+              <span key={skill.name}>{skill.name} · {skill.evidence} evidence sources</span>
+            ))}
+          </div>
+          <p className="credential-links">
+            <a href={credlyProfileUrl} target="_blank" rel="noreferrer">Explore all Credly badges</a>
+            <a href={credlySkillsUrl} target="_blank" rel="noreferrer">Verified skills wallet</a>
+          </p>
+        </article>
+
+        <SkillGraph />
+
+        <h3 className="credentials-heading">Courses and certificates</h3>
+        <div className="grid-list credentials-list">
+          {certificates.map((certificate) => (
+            <article className="terminal-card credential-card" key={certificate.name}>
+              <p className="period">{certificate.completed ?? 'Completion date unavailable'}</p>
+              <h3>{certificate.name}</h3>
+              <p>{certificate.issuer}</p>
+              <div className="stack-list" aria-label={`Skills covered by ${certificate.name}`}>
+                {certificate.skills.map((skill) => <span key={skill}>{skill}</span>)}
+              </div>
+              {(certificate.badgeUrl || certificate.certificateUrl) && (
+                <a href={certificate.badgeUrl ?? certificate.certificateUrl} target="_blank" rel="noreferrer">View certificate ↗</a>
+              )}
+            </article>
+          ))}
+        </div>
+
+        <h3 className="credentials-heading">More verified badges</h3>
+        <div className="grid-list credentials-list">
+          {featuredBadges.map((badge) => (
+            <article className="terminal-card credential-card" key={badge.name}>
+              <p className="period">Issued {badge.issued}</p>
+              <h3>{badge.name}</h3>
+              <p>{badge.issuer}</p>
+              <div className="stack-list" aria-label={`Skills covered by ${badge.name}`}>
+                {badge.skills.map((skill) => <span key={skill}>{skill}</span>)}
+              </div>
+              <a href={badge.url} target="_blank" rel="noreferrer">View certificate ↗</a>
+            </article>
+          ))}
+        </div>
       </div>
     );
   }
@@ -796,7 +837,13 @@ export function Terminal() {
   const [order66Active, setOrder66Active] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
   const scrollRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const previousEntryCountRef = useRef(0);
+  const scrollToNewEntryRef = useRef(false);
+  const commandHistoryRef = useRef<string[]>([]);
+  const historyIndexRef = useRef<number | null>(null);
+  const historyDraftRef = useRef('');
 
   const bootEntries = useMemo<TerminalEntry[]>(
     () => bootSequence.map((line) => ({ id: createId(), type: 'system', content: line })),
@@ -828,8 +875,24 @@ export function Terminal() {
     return () => window.clearInterval(timer);
   }, [bootEntries]);
 
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+  useLayoutEffect(() => {
+    const container = scrollRef.current;
+    const firstNewEntry = historyRef.current?.children[previousEntryCountRef.current];
+
+    if (container) {
+      if (scrollToNewEntryRef.current && firstNewEntry) {
+        const top = container.scrollTop + firstNewEntry.getBoundingClientRect().top - container.getBoundingClientRect().top - 12;
+        container.scrollTo({ top, behavior: 'instant' });
+      } else if (entries.length === 0) {
+        container.scrollTo({ top: 0, behavior: 'instant' });
+      } else if (entries.length > previousEntryCountRef.current || gameActive) {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        container.scrollTo({ top: container.scrollHeight, behavior: reducedMotion ? 'instant' : 'smooth' });
+      }
+    }
+
+    previousEntryCountRef.current = entries.length;
+    scrollToNewEntryRef.current = false;
   }, [entries, gameActive]);
 
   useEffect(() => {
@@ -880,6 +943,13 @@ export function Terminal() {
       return;
     }
 
+    if (commandHistoryRef.current.at(-1) !== rawCommand.trim()) {
+      commandHistoryRef.current.push(rawCommand.trim());
+    }
+    historyIndexRef.current = null;
+    historyDraftRef.current = '';
+    scrollToNewEntryRef.current = command !== 'clear';
+
     if (command === 'clear') {
       setEntries([]);
       setInput('');
@@ -924,6 +994,31 @@ export function Terminal() {
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      const history = commandHistoryRef.current;
+      if (history.length === 0 || (event.key === 'ArrowDown' && historyIndexRef.current === null)) {
+        return;
+      }
+
+      event.preventDefault();
+      if (event.key === 'ArrowUp') {
+        if (historyIndexRef.current === null) {
+          historyDraftRef.current = event.currentTarget.value;
+          historyIndexRef.current = history.length - 1;
+        } else {
+          historyIndexRef.current = Math.max(0, historyIndexRef.current - 1);
+        }
+        setInput(history[historyIndexRef.current]);
+      } else if (historyIndexRef.current !== null && historyIndexRef.current < history.length - 1) {
+        historyIndexRef.current += 1;
+        setInput(history[historyIndexRef.current]);
+      } else {
+        historyIndexRef.current = null;
+        setInput(historyDraftRef.current);
+      }
+      return;
+    }
+
     if (event.key !== 'Enter') {
       return;
     }
@@ -932,15 +1027,24 @@ export function Terminal() {
     runCommand(event.currentTarget.value);
   }
 
+  function handleTerminalClick(event: MouseEvent<HTMLElement>) {
+    if (gameActive || window.getSelection()?.toString()) {
+      return;
+    }
+
+    const target = event.target;
+    if (target instanceof Element && target.closest('a, button, input, textarea, select, [tabindex]')) {
+      return;
+    }
+
+    inputRef.current?.focus();
+  }
+
   return (
     <section
       className={`terminal-window${order66Active ? ' order-66' : ''}`}
       aria-label="Interactive CV terminal"
-      onClick={() => {
-        if (!gameActive) {
-          inputRef.current?.focus();
-        }
-      }}
+      onClick={handleTerminalClick}
     >
       <div className="terminal-topbar">
         <div className="window-controls" aria-hidden="true">
@@ -954,7 +1058,7 @@ export function Terminal() {
 
       <div className="terminal-body" ref={scrollRef}>
         <IntroBlock />
-        <div className="history">
+        <div className="history" ref={historyRef} role="log" aria-label="Terminal output" aria-live="polite" aria-relevant="additions">
           {entries.map((entry) => (
             <Entry key={entry.id} cheatMode={cheatMode} entry={entry} onRunCommand={runCommand} />
           ))}

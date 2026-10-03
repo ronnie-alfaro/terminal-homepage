@@ -461,6 +461,211 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.credentials-section {
+  display: grid;
+  gap: 14px;
+}
+
+.credentials-heading {
+  margin: 10px 0 0;
+  color: var(--cyan);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.95rem;
+}
+
+.credentials-overview {
+  max-width: 100%;
+}
+
+.credential-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.credential-card {
+  gap: 10px;
+}
+
+.credential-card .stack-list {
+  align-content: start;
+}
+
+.credential-card > a {
+  align-self: end;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.86rem;
+}
+
+.skill-map {
+  gap: 16px;
+}
+
+.skill-map-intro {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.skill-map-intro h3 {
+  margin: 2px 0 0;
+  font-size: 1.12rem;
+}
+
+.skill-map-intro > p {
+  max-width: 410px;
+}
+
+.skill-map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  color: var(--muted);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.78rem;
+}
+
+.skill-map-legend span::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--node-accent);
+  box-shadow: 0 0 9px var(--node-accent);
+}
+
+.category-agents { --node-accent: #62d7df; }
+.category-retrieval { --node-accent: #78e08f; }
+.category-mlops { --node-accent: #f3c969; }
+.category-generative-ai { --node-accent: #c2a5f9; }
+.category-security { --node-accent: #ff8a8a; }
+
+.skill-map-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(3, 12, 14, 0.72);
+  scrollbar-color: rgba(98, 215, 223, 0.45) transparent;
+}
+
+.skill-map-scroll:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.skill-map-canvas {
+  position: relative;
+  width: 100%;
+  min-width: 900px;
+  aspect-ratio: 1000 / 560;
+  background:
+    radial-gradient(circle at 22% 26%, rgba(98, 215, 223, 0.11), transparent 26%),
+    radial-gradient(circle at 76% 28%, rgba(120, 224, 143, 0.09), transparent 27%),
+    radial-gradient(circle at 58% 76%, rgba(194, 165, 249, 0.08), transparent 26%),
+    linear-gradient(rgba(98, 215, 223, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(98, 215, 223, 0.035) 1px, transparent 1px);
+  background-size: auto, auto, auto, 40px 40px, 40px 40px;
+}
+
+.skill-map-canvas svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.skill-map-line {
+  stroke: rgba(132, 211, 220, 0.2);
+  transition: stroke 180ms ease, opacity 180ms ease;
+}
+
+.skill-map-line.is-related {
+  stroke: rgba(132, 235, 225, 0.8);
+}
+
+.skill-map-node {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-content: center;
+  gap: 2px;
+  width: 90px;
+  height: 90px;
+  padding: 8px;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--node-accent);
+  border-radius: 50%;
+  color: var(--text);
+  background: rgba(9, 28, 31, 0.94);
+  box-shadow: 0 0 0 5px rgba(6, 18, 20, 0.72), 0 0 17px rgba(98, 215, 223, 0.08);
+  cursor: pointer;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.72rem;
+  line-height: 1.22;
+  text-align: center;
+  transition: box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.skill-map-node[data-size="2"] { width: 100px; height: 100px; }
+.skill-map-node[data-size="3"] { width: 110px; height: 110px; }
+
+.skill-map-node small {
+  color: var(--node-accent);
+  font-size: 0.78rem;
+}
+
+.skill-map-node:hover,
+.skill-map-node.is-active,
+.skill-map-node:focus-visible {
+  z-index: 2;
+  outline: none;
+  background: #122c30;
+  box-shadow: 0 0 0 5px rgba(6, 18, 20, 0.78), 0 0 24px var(--node-accent);
+}
+
+.skill-map-node:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 5px;
+}
+
+.skill-map-detail {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.55fr) minmax(0, 1fr);
+  gap: 18px;
+  padding-top: 2px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.skill-map-detail h4 {
+  margin: 4px 0 6px;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.skill-map-detail ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill-map-detail li {
+  display: grid;
+  gap: 2px;
+  padding-left: 12px;
+  border-left: 2px solid var(--line-bright);
+  font-size: 0.82rem;
+}
+
+.skill-map-detail li span {
+  color: var(--muted);
+}
+
 .terminal-card {
   display: grid;
   align-content: start;
@@ -476,6 +681,10 @@ h1 {
   color: var(--text);
   font-size: 1rem;
   line-height: 1.3;
+}
+
+.project-list h3 a {
+  color: inherit;
 }
 
 .terminal-card p {
@@ -644,6 +853,18 @@ h1 {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .cursor,
+  .command-row-guide::before {
+    animation: none;
+  }
+
+  .skill-map-node,
+  .skill-map-line {
+    transition: none;
+  }
+}
+
 @media (max-width: 860px) {
   .shell {
     width: min(100% - 20px, 760px);
@@ -655,6 +876,10 @@ h1 {
 
   .credentials-list {
     grid-template-columns: 1fr;
+  }
+
+  .skill-map-intro {
+    display: grid;
   }
 
   .terminal-topbar {
@@ -690,6 +915,10 @@ h1 {
   .signals span,
   .stack-list span {
     font-size: 0.78rem;
+  }
+
+  .skill-map-detail {
+    grid-template-columns: 1fr;
   }
 
   .file-row {
